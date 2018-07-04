@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  xmlns:util="http://www.springframework.org/schema/util" xmlns:batch="http://www.springframework.org/schema/batch"
+     xmlns:p="http://www.springframework.org/schema/p" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="
+          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd          
+          http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+          http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd">
+          
+     <batch:job id="Example">
+     
+	    <batch:step id="firstStep" next="SecondStep">
+			<batch:tasklet ref="initializeTasklet" />
+		</batch:step>
+    
+    	<batch:step id="SecondStep" next="finalize">
+			<batch:tasklet>
+				<batch:chunk 	
+					reader="exampleReader"
+					writer="exampleWriter"
+					commit-interval="100"/>
+			</batch:tasklet>
+		</batch:step>
+		
+		<batch:step id="finalize">
+			<batch:tasklet ref="finalizeTasklet" />
+		</batch:step>
+		
+     </batch:job>
+     
+     <bean id="initializeTasklet" class="com.example.tasklet.InitializeTasklet" scope="step">
+     </bean>
+	     
+   	<bean id="exampleReader" class="org.mybatis.spring.batch.MyBatisCursorItemReader" scope="step">
+		<property name="sqlSessionFactory" 	ref="sqlSessionFactory" />
+		<property name="queryId" 			value="exampleSelectQuery" />
+		<property name="parameterValues">
+			<map>
+				<entry key="exampleKey" value="#{jobExecutionContext['exampleKey']}" />
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="exampleWriter" class="org.mybatis.spring.batch.MyBatisBatchItemWriter">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="statementId" 		 value="exampleInsertQuery" />
+	</bean>
+	
+	<bean id="finalizeTasklet" class="com.example.batch.tasklet.FinalizeTasklet" scope="step">
+    </bean>
+
+</beans>

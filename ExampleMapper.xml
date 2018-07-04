@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.dao.batch.ExampleBatchDao">
+
+	<select id="exampleSelectQuery" resultMap="com.example.mapper.ExampleMap">
+		select EXA_ID,EXA_NAME,EXA_SURNAME
+		from EXAMPLE_TABLE
+	</select>
+
+	<insert id="exampleInsert" parameterType="com.example.model.EXAMPLE">
+		INSERT INTO EXAMPLE_TABLE (COLUMN1, COLUMN2, COLUMN3)
+		VALUES (#{id, jdbcType=INTEGER},#{name,jdbcType=VARCHAR},#{surname, jdbcType=VARCHAR})
+	</insert>
+	
+	<insert id="object1Insert" parameterType="com.example.model.Object1">
+		INSERT INTO OBJECT1_TABLE (COLUMN1, COLUMN2, COLUMN3)
+		VALUES (#{id, jdbcType=INTEGER},#{name,jdbcType=VARCHAR},#{surname, jdbcType=VARCHAR})
+	</insert>
+	
+	<insert id="object2Insert" parameterType="com.example.model.Object2">
+		INSERT INTO OBJECT2_TABLE (COLUMN1, COLUMN2, COLUMN3)
+		VALUES (#{id, jdbcType=INTEGER},#{name,jdbcType=VARCHAR},#{surname, jdbcType=VARCHAR})
+	</insert>
+	
+</mapper>
